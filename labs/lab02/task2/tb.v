@@ -1,11 +1,19 @@
 // tb.v
-// Starter testbench template -- YOU complete this file.
+
+// tb.v  (task2: lut)
 
 module tb;
 
-  // TODO: declare the inputs and outputs
+  reg  [1:0] t_sel;
+  wire [7:0] t_dout;
 
-  // TODO: instantiate DUT here
+  integer i;
+
+  // Instance name must stay DUT for the $dumpvars line
+  lut #(.WIDTH(8), .DEPTH(4)) DUT (
+    .sel (t_sel),
+    .dout(t_dout)
+  );
 
   // Waveform dump configuration (DO NOT CHANGE)
   string vcd_file;
@@ -17,11 +25,15 @@ module tb;
   end
 
   initial begin
-    // TODO: apply different input combinations
-
+    #1; // let the ROM's initial block finish first
+    for (i = 0; i < 4; i = i + 1) begin
+      t_sel = i[1:0];
+      #10;
+    end
+    $finish;
   end
 
   initial
-    $monitor($time, " I0=%b I1=%b S=%b | Y=%b", t_i0, t_i1, t_s, t_y); // change as required
+    $monitor($time, " sel=%d | dout=%d", t_sel, t_dout);
 
 endmodule
